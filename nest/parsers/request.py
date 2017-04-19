@@ -30,8 +30,7 @@ class RequestParser(object):
         except Exception as _:
             raise Exception('Invalid request!')
 
-        if method not in self.VALID_METHODS:
-            raise Exception('Invalid request!')
+        assert method in self.VALID_METHODS
 
         if '?' in request:
             path, qs = request.split('?', 1)

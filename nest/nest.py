@@ -73,9 +73,6 @@ class Nest(object):
                 break
             nr = NestResponder(writer, self.app)
             nr.respond(env)
-            # self.app(env, nr.start_response)
-            # writer.write(
-            #     b'HTTP/1.1 200 OK\r\nContent-length: 11\r\n\r\nHello World\r\n')
 
     def run(self):
         self.loop = uvloop.new_event_loop()

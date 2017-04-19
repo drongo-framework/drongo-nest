@@ -4,6 +4,8 @@ from .request import RequestParser
 
 
 class HttpParser(object):
+    __slots__ = ['complete', 'rparser', 'hparser', 'bparser']
+
     def __init__(self):
         self.complete = False
         self.rparser = RequestParser()

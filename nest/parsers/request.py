@@ -9,6 +9,8 @@ import urllib.parse
 
 
 class RequestParser(object):
+    __slots__ = ['_buffer', 'complete']
+
     VALID_METHODS = set(['GET', 'POST', 'PUT', 'DELETE'])
 
     def __init__(self):

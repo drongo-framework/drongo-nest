@@ -9,6 +9,8 @@ import urllib.parse
 
 
 class UrlEncodedParser(object):
+    __slots__ = ['_buffer', 'complete']
+
     def __init__(self):
         self._buffer = b''
         self.complete = False
@@ -27,6 +29,8 @@ class UrlEncodedParser(object):
 
 
 class MultipartParser(object):
+    __slots__ = ['_buffer', 'complete']
+
     def __init__(self):
         self._buffer = b''
         self.complete = False
@@ -36,6 +40,8 @@ class MultipartParser(object):
 
 
 class RawParser(object):
+    __slots__ = ['_buffer', 'complete']
+
     def __init__(self):
         self._buffer = b''
         self.complete = False
@@ -53,6 +59,8 @@ class RawParser(object):
 
 
 class BodyParser(object):
+    __slots__ = ['_buffer', 'complete', 'parser']
+
     RETAIN_KEYS = set(['CONTENT_TYPE', 'CONTENT_LENGTH'])
 
     def __init__(self):

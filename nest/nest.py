@@ -12,6 +12,8 @@ from .parsers import HttpParser
 
 
 class HttpReader(object):
+    __slots__ = ['reader']
+
     BUFFER_SIZE = 102400  # 100kb
 
     def __init__(self, reader):
@@ -29,6 +31,8 @@ class HttpReader(object):
 
 
 class NestResponder(object):
+    __slots__ = ['writer', 'app']
+
     def __init__(self, writer, app):
         self.writer = writer
         self.app = app
@@ -67,12 +71,12 @@ class Nest(object):
 
     async def handle(self, reader, writer):
         http = HttpReader(reader)
+        responder = NestResponder(writer, self.app)
         while True:
             env = await http.get_one()
             if env is None:
                 break
-            nr = NestResponder(writer, self.app)
-            nr.respond(env)
+            responder.respond(env)
 
     def run(self):
         self.loop = uvloop.new_event_loop()

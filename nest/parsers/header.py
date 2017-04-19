@@ -9,6 +9,8 @@ import urllib.parse
 
 
 class HeaderParser(object):
+    __slots__ = ['_buffer', 'complete']
+
     RETAIN_KEYS = set(['CONTENT_TYPE', 'CONTENT_LENGTH'])
 
     def __init__(self):

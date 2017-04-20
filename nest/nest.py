@@ -46,10 +46,11 @@ class NestResponder(object):
             self.writer.write(b'\r\n')
         self.writer.write(b'\r\n')
 
-    def respond(self, env):
+    async def respond(self, env):
         res = self.app(env, self.start_response)
         for data in res:
             self.writer.write(data)
+            await self.writer.drain()
 
 
 class Nest(object):
@@ -76,7 +77,7 @@ class Nest(object):
             env = await http.get_one()
             if env is None:
                 break
-            responder.respond(env)
+            await responder.respond(env)
 
     def run(self):
         self.loop = uvloop.new_event_loop()

@@ -1,12 +1,6 @@
-import ast
 import asyncio
-import io
-import os
 import socket
-import uuid
 import uvloop
-
-import urllib.parse
 
 from .parsers import HttpParser
 

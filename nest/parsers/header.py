@@ -1,13 +1,3 @@
-import ast
-import asyncio
-import io
-import os
-import socket
-import uuid
-
-import urllib.parse
-
-
 class HeaderParser(object):
     __slots__ = ['_buffer', 'complete']
 

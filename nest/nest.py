@@ -80,5 +80,7 @@ class Nest(object):
         server = self.loop.run_until_complete(server_coro)
         try:
             self.loop.run_forever()
+        except KeyboardInterrupt:
+            print('Shutting down...')
         finally:
             server.close()

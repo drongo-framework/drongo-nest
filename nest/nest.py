@@ -53,6 +53,7 @@ class Nest(object):
         self.sock = socket.socket()
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((host, port))
+        self.addr = (host, port)
         self.app = app
 
     def accept(self, reader, writer):
@@ -78,6 +79,7 @@ class Nest(object):
         server_coro = asyncio.start_server(
             self.accept, sock=self.sock, backlog=1000, loop=self.loop)
         server = self.loop.run_until_complete(server_coro)
+        print('Listening on', self.addr, '...')
         try:
             self.loop.run_forever()
         except KeyboardInterrupt:

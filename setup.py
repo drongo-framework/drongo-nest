@@ -17,10 +17,12 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP',
+    ],
+    install_requires=[
+        'uvloop',
     ],
     packages=find_packages(),
     include_package_data=True,

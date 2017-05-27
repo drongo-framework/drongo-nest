@@ -1,10 +1,19 @@
+import tempfile
+
+
 class TempFile(object):
+    def __init__(self):
+        self._tempfile = tempfile.NamedTemporaryFile(delete=True)
+
     def __add__(self, data):
-        # TODO: Implement
+        self._tempfile.write(data)
         return self
 
     def get(self):
-        return self
+        # FIXME: Think about something better
+        self._tempfile.flush()
+        self._tempfile.seek(0)
+        return self._tempfile
 
 
 class ByteBuffer(object):

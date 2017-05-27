@@ -1,3 +1,6 @@
+NEW_LINE = b'\r\n'
+
+
 class HeaderParser(object):
     __slots__ = ['_buffer', 'complete']
 
@@ -19,14 +22,14 @@ class HeaderParser(object):
         self._buffer += data
 
         while True:
-            if self._buffer[:2] == b'\r\n':
+            if self._buffer[:2] == NEW_LINE:
                 self.complete = True
                 self._buffer = self._buffer[2:]
                 consumed_size += 2
                 break
 
             try:
-                i = self._buffer.index(b'\r\n')
+                i = self._buffer.index(NEW_LINE)
                 line = self._buffer[:i].decode('utf8')
                 self._buffer = self._buffer[i+2:]
                 k, v = line.split(':', 1)

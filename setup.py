@@ -8,8 +8,6 @@ setup(
     name='drongo-nest',
     version=__version__,
     description='High performance server for drongo.',
-    author='Sattvik Chakravarthy',
-    author_email='sattvik@gmail.com',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

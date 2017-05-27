@@ -5,7 +5,7 @@ def test_benchmark_post_basic(benchmark):
     request = (
         b'POST / HTTP/1.1\r\n'
         b'Content-Type: application/x-www-form-urlencoded\r\n'
-        b'content-length: 11\r\n'
+        b'content-length: 11\r\n\r\n'
         b'hello=world'
     )
 

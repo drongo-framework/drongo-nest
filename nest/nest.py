@@ -69,10 +69,15 @@ class Nest(object):
         http = HttpReader(reader)
         responder = NestResponder(writer, self.app)
         while True:
-            env = await http.get_one()
-            if env is None:
-                break
-            await responder.respond(env)
+            try:
+                env = await http.get_one()
+                if env is None:
+                    break
+                await responder.respond(env)
+            except ConnectionResetError as _:
+                break  # Ignore the connection error
+            except BrokenPipeError:
+                break  # Ignore the broken pipe error
 
     def run(self):
         self.loop = uvloop.new_event_loop()

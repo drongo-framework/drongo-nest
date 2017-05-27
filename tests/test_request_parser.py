@@ -30,7 +30,7 @@ class TestRequest(unittest.TestCase):
         env = dict()
         req = b'GET /?a=b HTTP/1.1\r\n'
         self.parser.feed(req, env)
-        self.assertEqual(env['QUERY'], {'a': ['b']})
+        self.assertEqual(env['GET'], {'a': ['b']})
 
     def test_invalid_method(self):
         env = dict()

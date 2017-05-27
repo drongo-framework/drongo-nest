@@ -1,3 +1,8 @@
+import ast
+
+from .utils import TempFile, ByteBuffer
+
+
 class PartBoundaryParser(object):
     __slots__ = ['_buffer', 'complete', 'end', '_boundary', '_b1', '_b2']
 
@@ -44,6 +49,7 @@ class PartHeaderParser(object):
             if self._buffer[:2] == b'\r\n':
                 self.complete = True
                 self._buffer = self._buffer[2:]
+                self.post_process(env)
                 consumed_size += 2
                 break
 
@@ -62,16 +68,35 @@ class PartHeaderParser(object):
         assert consumed_size > initial_size  # Safety check
         return consumed_size - initial_size
 
+    def post_process(self, env):
+        nenv = {}
+        for key, val in env.items():
+            for v in val.split(';'):
+                v = v.strip()
+                if '=' in v:
+                    name, value = v.split('=')
+                    nenv[key + '_' + name.upper()] = ast.literal_eval(value)
+                else:
+                    nenv[key] = v
+        env.clear()
+        env.update(nenv)
+
 
 class PartBodyParser(object):
     def __init__(self, boundary):
         self.complete = False
         self._buffer = b''
-        self._contents = b''
+        self._contents = None
         self._boundary = boundary
         self._b = b'\r\n' + boundary
 
     def feed(self, data, env):
+        if self._contents is None:
+            if 'PART_CONTENT_DISPOSITION_FILENAME' in env:
+                self._contents = TempFile()
+            else:
+                self._contents = ByteBuffer()
+
         initial_size = len(self._buffer)
         self._buffer += data
         try:
@@ -85,6 +110,10 @@ class PartBodyParser(object):
                 self._contents += self._buffer[:si]
                 self._buffer = self._buffer[si:]
             return len(data)
+
+    def get_value(self):
+        if self._contents:
+            return self._contents.get()
 
 
 class PartTrailParser(object):
@@ -143,6 +172,9 @@ class PartParser(object):
                 self.end = self._trail_parser.end
 
             if self.complete:
+                name = self._env.get('PART_CONTENT_DISPOSITION_NAME')
+                value = self._body_parser.get_value()
+                env.setdefault('POST', {}).setdefault(name, []).append(value)
                 break
         return c
 

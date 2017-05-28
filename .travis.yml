@@ -7,6 +7,6 @@ before_install: "pip install codecov"
 install: "python setup.py install"
 script:
   - pip install -r test_requirements.txt
-  - py.test --cov=nest/ --benchmark-skip
+  - py.test --cov=nest --benchmark-skip
 after_success:
   codecov

@@ -21,6 +21,7 @@ class BodyParser(object):
                 self.parser = MultipartParser()
             else:
                 self.parser = RawParser()
+
         res = self.parser.feed(data, env)
         self.complete = self.parser.complete
         return res

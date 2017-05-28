@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 from setuptools import find_packages, setup
-from nest.version import __version__
 
 
 setup(
     name='drongo-nest',
-    version=__version__,
+    version='1.0.0a1',
     description='High performance server for drongo.',
     classifiers=[
         'Development Status :: 3 - Alpha',

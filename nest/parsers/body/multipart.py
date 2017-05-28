@@ -4,7 +4,7 @@ from .utils import TempFile, ByteBuffer
 
 
 class PartBoundaryParser(object):
-    __slots__ = ['_buffer', 'complete', 'end', '_boundary', '_b1', '_b2']
+    __slots__ = ['_buffer', '_boundary', '_b1', '_b2', 'complete', 'end']
 
     def __init__(self, boundary):
         self._boundary = boundary
@@ -83,6 +83,8 @@ class PartHeaderParser(object):
 
 
 class PartBodyParser(object):
+    __slots__ = ['_buffer', '_contents', '_boundary', '_b', 'complete']
+
     def __init__(self, boundary):
         self.complete = False
         self._buffer = b''
@@ -117,6 +119,8 @@ class PartBodyParser(object):
 
 
 class PartTrailParser(object):
+    __slots__ = ['_buffer', 'complete', 'end']
+
     def __init__(self):
         self._buffer = b''
         self.complete = False
@@ -140,6 +144,9 @@ class PartTrailParser(object):
 
 
 class PartParser(object):
+    __slots__ = ['_buffer', '_boundary', '_header_parser', '_body_parser',
+                 '_trail_parser', '_env', 'complete', 'end']
+
     def __init__(self, boundary):
         self.complete = False
         self.end = False
@@ -180,8 +187,8 @@ class PartParser(object):
 
 
 class MultipartParser(object):
-    __slots__ = ['_boundary', '_b1', '_b2', 'complete', '_boundary_parser',
-                 '_part_parser']
+    __slots__ = ['_boundary', '_b1', '_b2', '_boundary_parser', '_part_parser',
+                 'complete']
 
     def __init__(self):
         self.complete = False

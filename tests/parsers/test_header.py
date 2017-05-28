@@ -16,12 +16,14 @@ class TestHeaderParser(unittest.TestCase):
                   b'Accept: text/html,application/xhtml+xml,application/xml;' \
                   b'q=0.9,image/webp,*/*;q=0.8\r\n' \
                   b'Accept-Encoding: gzip, deflate, sdch, br\r\n' \
+                  b'content-type: application/json\r\n' \
                   b'Accept-Language: en-US,en;q=0.8\r\n\r\n'
 
         self.parser.feed(headers, env)
 
         self.assertEqual(env['HTTP_HOST'], 'localhost:5050')
         self.assertEqual(env['HTTP_CONNECTION'], 'keep-alive')
+        self.assertEqual(env['CONTENT_TYPE'], 'application/json')
         self.assertTrue(self.parser.complete)
 
     def test_line_by_line(self):

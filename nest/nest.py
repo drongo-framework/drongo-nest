@@ -1,6 +1,5 @@
 import asyncio
 import socket
-import uvloop
 
 from .parsers import HttpParser
 
@@ -13,11 +12,12 @@ class HttpReader(object):
     def __init__(self, reader):
         self.reader = reader
 
-    async def get_one(self):
+    @asyncio.coroutine
+    def get_one(self):
         http_parser = HttpParser()
         env = dict()
         while not http_parser.complete:
-            data = await self.reader.read(self.BUFFER_SIZE)
+            data = yield from self.reader.read(self.BUFFER_SIZE)
             if not data:
                 return None
             http_parser.feed(data, env)
@@ -40,11 +40,12 @@ class NestResponder(object):
             self.writer.write(b'\r\n')
         self.writer.write(b'\r\n')
 
-    async def respond(self, env):
+    @asyncio.coroutine
+    def respond(self, env):
         res = self.app(env, self.start_response)
         for data in res:
             self.writer.write(data)
-            await self.writer.drain()
+            yield from self.writer.drain()
 
 
 class Nest(object):
@@ -65,22 +66,23 @@ class Nest(object):
             writer.close()
         task.add_done_callback(client_done)
 
-    async def handle(self, reader, writer):
+    @asyncio.coroutine
+    def handle(self, reader, writer):
         http = HttpReader(reader)
         responder = NestResponder(writer, self.app)
         while True:
             try:
-                env = await http.get_one()
+                env = yield from http.get_one()
                 if env is None:
                     break
-                await responder.respond(env)
+                yield from responder.respond(env)
             except ConnectionResetError as _:
                 break  # Ignore the connection error
             except BrokenPipeError:
                 break  # Ignore the broken pipe error
 
     def run(self):
-        self.loop = uvloop.new_event_loop()
+        self.loop = asyncio.get_event_loop()
         server_coro = asyncio.start_server(
             self.accept, sock=self.sock, backlog=1000, loop=self.loop)
         server = self.loop.run_until_complete(server_coro)

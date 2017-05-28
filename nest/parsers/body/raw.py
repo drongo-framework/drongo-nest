@@ -10,7 +10,7 @@ class RawParser(object):
         initial_size = len(self._buffer)
         self._buffer += data
         if len(self._buffer) >= leng:
-            env['BODY'] = self._buffer[:leng].strip().decode('utf8')
+            env['BODY'] = self._buffer[:leng].strip()
             self.complete = True
             return leng - initial_size
         else:

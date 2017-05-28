@@ -126,3 +126,34 @@ class TestBodyParser(unittest.TestCase):
             req = req[self.bparser.feed(req[:2], env):]
 
         self.assertEqual(len(env['POST']), 3)
+
+    def test_raw_body(self):
+        req = (
+            b'POST / HTTP/1.1\r\n'
+            b'content-type: application/json\r\n'
+            b'content-length: 23\r\n\r\n'
+            b'{"test": "hello world"}'
+        )
+        env = dict()
+        req = req[self.rparser.feed(req, env):]
+        req = req[self.hparser.feed(req, env):]
+        req = req[self.bparser.feed(req, env):]
+
+        self.assertEqual(env['BODY'], b'{"test": "hello world"}')
+
+    def test_raw_body_chunked(self):
+        req = (
+            b'POST / HTTP/1.1\r\n'
+            b'content-type: application/json\r\n'
+            b'content-length: 23\r\n\r\n'
+            b'{"test": "hello world"}'
+        )
+        env = dict()
+        while not self.rparser.complete:
+            req = req[self.rparser.feed(req[:2], env):]
+        while not self.hparser.complete:
+            req = req[self.hparser.feed(req[:2], env):]
+        while not self.bparser.complete:
+            req = req[self.bparser.feed(req[:2], env):]
+
+        self.assertEqual(env['BODY'], b'{"test": "hello world"}')

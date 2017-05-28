@@ -18,10 +18,7 @@ class BodyParser(object):
             if env['CONTENT_TYPE'] == 'application/x-www-form-urlencoded':
                 self.parser = UrlEncodedParser()
             elif env['CONTENT_TYPE'].startswith('multipart/form-data'):
-                boundary = (
-                    env['CONTENT_TYPE'].split('boundary=', 1)[1].split(';')[0]
-                    .strip().encode('ascii'))
-                self.parser = MultipartParser(boundary)
+                self.parser = MultipartParser()
             else:
                 self.parser = RawParser()
         res = self.parser.feed(data, env)

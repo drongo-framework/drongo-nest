@@ -183,16 +183,24 @@ class MultipartParser(object):
     __slots__ = ['_boundary', '_b1', '_b2', 'complete', '_boundary_parser',
                  '_part_parser']
 
-    def __init__(self, boundary):
+    def __init__(self):
         self.complete = False
 
-        self._boundary = b'--' + boundary
-        self._boundary_parser = PartBoundaryParser(self._boundary)
+        self._boundary = None
+        self._boundary_parser = None
         self._part_parser = None
 
-    def feed(self, data, env):
-        c = 0
+    def set_boundary_from_env(self, env):
+        self._boundary = boundary = b'--' + (
+            env['CONTENT_TYPE'].split('boundary=', 1)[1].split(';')[0]
+            .strip().encode('ascii'))
+        self._boundary_parser = PartBoundaryParser(self._boundary)
 
+    def feed(self, data, env):
+        if self._boundary is None:
+            self.set_boundary_from_env(env)
+
+        c = 0
         while data:
             if not self._boundary_parser.complete:
                 i = self._boundary_parser.feed(data, None)

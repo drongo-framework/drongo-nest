@@ -1,4 +1,4 @@
-import urllib.parse
+import six.moves.urllib.parse as urlparse
 
 
 class UrlEncodedParser(object):
@@ -14,7 +14,7 @@ class UrlEncodedParser(object):
         self._buffer += data
         if len(self._buffer) >= leng:
             env['BODY'] = self._buffer[:leng].strip().decode('utf8')
-            env['POST'] = urllib.parse.parse_qs(env['BODY'])
+            env['POST'] = urlparse.parse_qs(env['BODY'])
             self.complete = True
             return leng - initial_size
         else:

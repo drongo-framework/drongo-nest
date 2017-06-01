@@ -1,4 +1,4 @@
-import urllib.parse
+import six.moves.urllib.parse as urlparse
 
 
 class RequestParser(object):
@@ -35,6 +35,6 @@ class RequestParser(object):
         env['REQUEST_METHOD'] = method.upper()
         env['PATH_INFO'] = path
         env['QUERY_STRING'] = qs
-        env['GET'] = urllib.parse.parse_qs(qs)
+        env['GET'] = urlparse.parse_qs(qs)
         self.complete = True
         return idx + 2 - initial_size

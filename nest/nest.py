@@ -21,7 +21,14 @@ class Nest(object):
         # Use asynio by default for Python 3.4 and above
         self.async = settings.get('async', (sys.version_info[:2] >= (3, 4)))
 
+        # Do not use this in production!
+        self.auto_reload = settings.get('auto_reload', False)
+
     def run(self):
+        if self.auto_reload:
+            from .reloader import Reloader
+            self.reloader = Reloader.activate()
+
         if self.async:
             from .handlers.async import AsyncHandler
 

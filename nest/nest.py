@@ -40,10 +40,9 @@ class Nest(object):
             # TODO: Implement
             print('Not supported at the moment.')
 
-        self.deinit()
-
-    def deinit(self):
+    def shutdown(self):
         if self.reloader:
             self.reloader.shutdown()
 
+        self.handler.shutdown()
         self.sock.close()

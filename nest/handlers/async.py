@@ -85,11 +85,10 @@ class AsyncHandler(object):
         self.loop = asyncio.get_event_loop()
         server_coro = asyncio.start_server(
             self.accept, sock=self.sock, backlog=1000, loop=self.loop)
-        server = self.loop.run_until_complete(server_coro)
+        self.server = self.loop.run_until_complete(server_coro)
 
-        try:
-            self.loop.run_forever()
-        except KeyboardInterrupt:
-            print('Shutting down...')
-        finally:
-            server.close()
+        self.loop.run_forever()
+
+    def shutdown(self):
+        # TODO: Close all the active clients
+        self.server.close()

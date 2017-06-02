@@ -16,6 +16,7 @@ class Reader(object):
 
     def get(self):
         data = self.sock.recv(self.BUFFER_SIZE)
+        self.http_parser.feed(data, self.env)
 
         if self.http_parser.complete:
             # return and reset

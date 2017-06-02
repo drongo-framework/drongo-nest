@@ -55,3 +55,7 @@ class Reloader(Thread):
         cls.__thread__ = cls(interval=interval)
         cls.__thread__.start()
         return cls.__thread__
+
+    def shutdown(self):
+        self.running = False
+        self.join()

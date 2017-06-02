@@ -23,6 +23,7 @@ class Nest(object):
 
         # Do not use this in production!
         self.auto_reload = settings.get('auto_reload', False)
+        self.reloader = None
 
     def run(self):
         if self.auto_reload:
@@ -38,3 +39,11 @@ class Nest(object):
         else:
             # TODO: Implement
             print('Not supported at the moment.')
+
+        self.deinit()
+
+    def deinit(self):
+        if self.reloader:
+            self.reloader.shutdown()
+
+        self.sock.close()

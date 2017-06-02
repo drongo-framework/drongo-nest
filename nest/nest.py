@@ -35,10 +35,12 @@ class Nest(object):
 
             self.handler = AsyncHandler(
                 nest=self, app=self.app, socket=self.sock)
-            self.handler.run()
         else:
-            # TODO: Implement
-            print('Not supported at the moment.')
+            from .handlers.sync import SyncHandler
+            self.handler = SyncHandler(
+                nest=self, app=self.app, socket=self.sock)
+
+        self.handler.run()
 
     def shutdown(self):
         if self.reloader:

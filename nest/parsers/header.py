@@ -1,3 +1,6 @@
+import six
+
+
 NEW_LINE = b'\r\n'
 
 
@@ -30,7 +33,10 @@ class HeaderParser(object):
 
             try:
                 i = self._buffer.index(NEW_LINE)
-                line = self._buffer[:i].decode('utf8')
+                line = self._buffer[:i]
+                if six.PY3:
+                    line = line.decode('ascii')
+
                 self._buffer = self._buffer[i+2:]
                 k, v = line.split(':', 1)
                 k = self._make_key(k)

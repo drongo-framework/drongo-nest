@@ -22,7 +22,7 @@ class Reloader(Thread):
     def _scan(self):
         modules = [
             m.__file__ for m in sys.modules.values()
-            if '__file__' in m.__dict__
+            if m is not None and '__file__' in m.__dict__
         ]
 
         for filename in modules:

@@ -8,8 +8,9 @@ from threading import Thread
 class Reloader(Thread):
     __thread__ = None
 
-    def __init__(self, interval=1):
+    def __init__(self, app=None, interval=1):
         super(Reloader, self).__init__(name='reload_monitor')
+        self.app = app
         self.interval = interval
         self.running = False
         self.mtimes = {}
@@ -17,6 +18,8 @@ class Reloader(Thread):
     def _reload(self):
         print('Code change detected, reloading...')
         python = sys.executable
+        if self.app:
+            self.app.shutdown()
         os.execl(python, python, *sys.argv)
 
     def _scan(self):
@@ -38,7 +41,7 @@ class Reloader(Thread):
 
             if filename in self.mtimes:
                 if mtime != self.mtimes[filename]:
-                    self._reload()
+                    Thread(target=self._reload).start()
 
             self.mtimes[filename] = mtime
 
@@ -49,10 +52,12 @@ class Reloader(Thread):
             time.sleep(self.interval)
 
     @classmethod
-    def activate(cls, interval=1):
+    def activate(cls, app=None, interval=1):
         if cls.__thread__:
             return
-        cls.__thread__ = cls(interval=interval)
+
+        cls.app = app
+        cls.__thread__ = cls(app=app, interval=interval)
         cls.__thread__.start()
         return cls.__thread__
 

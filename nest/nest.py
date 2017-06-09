@@ -28,7 +28,7 @@ class Nest(object):
     def run(self):
         if self.auto_reload:
             from .reloader import Reloader
-            self.reloader = Reloader.activate()
+            self.reloader = Reloader.activate(app=self)
 
         if self.async:
             from .handlers.async import AsyncHandler

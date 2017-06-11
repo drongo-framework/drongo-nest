@@ -47,4 +47,5 @@ class Nest(object):
             self.reloader.shutdown()
 
         self.handler.shutdown()
+        self.handler.wait()
         self.sock.close()

@@ -1,5 +1,7 @@
 from ..parsers import HttpParser
 
+from threading import Lock
+
 import select
 
 
@@ -59,6 +61,7 @@ class SyncHandler(object):
         self.app = app
         self.sock = socket
         self.running = False
+        self.lock = Lock()
 
     def handle_server(self):
         client, addr = self.sock.accept()
@@ -74,23 +77,31 @@ class SyncHandler(object):
             responder.respond(env)
 
     def run(self):
-        print('Listening on', self.nest.addr, '...')
-        self.sock.listen(5)
-        self.running = True
+        with self.lock:
+            print('Listening on', self.nest.addr, '...')
+            self.sock.listen(5)
+            self.running = True
 
-        while self.running:
-            rlist, wlist, xlist = select.select(
-                [self.sock] + self._clients,  # rlist
-                [],  # wlist
-                [],  # xlist
-                1  # timeout
-            )
+            while self.running:
+                rlist, wlist, xlist = select.select(
+                    [self.sock] + self._clients,  # rlist
+                    [],  # wlist
+                    [],  # xlist
+                    1  # timeout
+                )
 
-            for sock in rlist:
-                if sock == self.sock:
-                    self.handle_server()
-                else:
-                    self.handle_client(sock)
+                for sock in rlist:
+                    if sock == self.sock:
+                        self.handle_server()
+                    else:
+                        self.handle_client(sock)
+
+            for sock in self._clients:
+                sock.close()
+
+    def wait(self):
+        with self.lock:
+            pass
 
     def shutdown(self):
         self.running = False

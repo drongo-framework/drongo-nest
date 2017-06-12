@@ -88,6 +88,14 @@ class AsyncHandler(object):
 
         self.loop.run_forever()
 
+    @asyncio.coroutine
+    def async_shutdown(self):
+        for task, (r, w) in self._clients.items():
+            w.close()
+
     def shutdown(self):
-        # TODO: Close all the active clients
+        self.loop.run_until_complete(self.async_shutdown())
         self.server.close()
+
+    def wait(self):
+        pass

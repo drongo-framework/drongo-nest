@@ -32,7 +32,6 @@ class Nest(object):
 
         if self.async:
             from .handlers.async import AsyncHandler
-
             self.handler = AsyncHandler(
                 nest=self, app=self.app, socket=self.sock)
         else:

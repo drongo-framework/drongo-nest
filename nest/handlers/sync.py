@@ -1,3 +1,4 @@
+from .websocket import WebsocketHandler
 from ..parsers import HttpParser
 
 from threading import Lock
@@ -57,11 +58,20 @@ class SyncHandler(object):
         self._clients = []
         self._client_readers = {}
 
+        self._websocket_clients = []
+        self._websocket_handlers = {}
+
         self.nest = nest
         self.app = app
         self.sock = socket
         self.running = False
         self.lock = Lock()
+
+    def _is_websocket_connection(self, env):
+        if 'Upgrade' in env.get('HTTP_CONNECTION'):
+            if 'websocket' in env.get('HTTP_UPGRADE'):
+                return True
+        return False
 
     def handle_server(self):
         client, addr = self.sock.accept()
@@ -70,11 +80,20 @@ class SyncHandler(object):
         self._client_readers[client] = reader
 
     def handle_client(self, sock):
-        reader = self._client_readers.get(sock)
-        env = reader.get()
-        if env:
-            responder = Responder(sock, self.app)
-            responder.respond(env)
+        if sock in self._websocket_clients:
+            handler = self._websocket_handlers[sock]
+            handler.read()
+        else:
+            reader = self._client_readers.get(sock)
+            env = reader.get()
+            if env:
+                if self._is_websocket_connection(env=env):
+                    handler = WebsocketHandler(sock)
+                    self._websocket_clients.append(sock)
+                    self._websocket_handlers[sock] = handler
+                    env.update(dict(WEBSOCKET_HANDLER=handler))
+                responder = Responder(sock, self.app)
+                responder.respond(env)
 
     def run(self):
         with self.lock:

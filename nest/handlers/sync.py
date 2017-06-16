@@ -18,6 +18,10 @@ class Reader(object):
 
     def get(self):
         data = self.sock.recv(self.BUFFER_SIZE)
+
+        if len(data) == 0:
+            raise EOFError
+
         self.http_parser.feed(data, self.env)
 
         if self.http_parser.complete:
@@ -71,10 +75,15 @@ class SyncHandler(object):
 
     def handle_client(self, sock):
         reader = self._client_readers.get(sock)
-        env = reader.get()
-        if env:
-            responder = Responder(sock, self.app)
-            responder.respond(env)
+        try:
+            env = reader.get()
+            if env:
+                responder = Responder(sock, self.app)
+                responder.respond(env)
+        except EOFError:
+            sock.close()
+            self._client_readers.pop(sock)
+            self._clients.remove(sock)
 
     def run(self):
         with self.lock:

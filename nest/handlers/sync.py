@@ -3,6 +3,7 @@ from ..parsers import HttpParser
 from threading import Lock
 
 import select
+import socket
 
 
 class Reader(object):
@@ -80,7 +81,9 @@ class SyncHandler(object):
             if env:
                 responder = Responder(sock, self.app)
                 responder.respond(env)
-        except EOFError:
+        except (EOFError, socket.error) as _:
+            pass  # TODO: Log the error
+        finally:
             sock.close()
             self._client_readers.pop(sock)
             self._clients.remove(sock)

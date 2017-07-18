@@ -8,7 +8,7 @@ from threading import Thread
 class Reloader(Thread):
     __thread__ = None
 
-    def __init__(self, app=None, interval=1):
+    def __init__(self, app=None, interval=2):
         super(Reloader, self).__init__(name='reload_monitor')
         self.app = app
         self.interval = interval

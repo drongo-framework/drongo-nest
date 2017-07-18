@@ -90,12 +90,12 @@ class AsyncHandler(object):
 
     @asyncio.coroutine
     def async_shutdown(self):
+        self.server.close()
         for task, (r, w) in self._clients.items():
             w.close()
 
     def shutdown(self):
-        self.loop.run_until_complete(self.async_shutdown())
-        self.server.close()
+        self.loop.create_task(self.async_shutdown())
 
     def wait(self):
         pass

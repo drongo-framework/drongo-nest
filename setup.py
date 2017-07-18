@@ -3,7 +3,7 @@
 from setuptools import find_packages, setup
 
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 REPO_URL = 'https://github.com/drongo-framework/drongo-nest'
 DOWNLOAD_URL = REPO_URL + '/archive/v{version}.tar.gz'.format(version=VERSION)
 
@@ -13,6 +13,9 @@ setup(
     description='High performance server for drongo.',
     author='Sattvik Chakravarthy, Sagar Chakravarthy',
     author_email='sattvik@gmail.com',
+    entry_points={'console_scripts': [
+        'drongo-nest = nest.cmd:main',
+    ]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',

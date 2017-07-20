@@ -15,7 +15,8 @@ class BodyParser(object):
 
     def feed(self, data, env):
         if self._parser is None:
-            if env['CONTENT_TYPE'] == 'application/x-www-form-urlencoded':
+            if env['CONTENT_TYPE'].startswith(
+                    'application/x-www-form-urlencoded'):
                 self._parser = UrlEncodedParser()
             elif env['CONTENT_TYPE'].startswith('multipart/form-data'):
                 self._parser = MultipartParser()

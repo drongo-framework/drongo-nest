@@ -95,7 +95,7 @@ class PartBodyParser(object):
     def feed(self, data, env):
         if self._contents is None:
             if 'PART_CONTENT_DISPOSITION_FILENAME' in env:
-                self._contents = TempFile()
+                self._contents = TempFile(env)
             else:
                 self._contents = ByteBuffer()
 

@@ -27,7 +27,6 @@ def main():
         port=options.port,
         auto_reload=options.auto_reload
     )
-    print(kwargs)
     nest = Nest(**kwargs)
     try:
         nest.run()

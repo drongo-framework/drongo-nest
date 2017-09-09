@@ -1,6 +1,9 @@
 import tempfile
 
 
+__all__ = ['TempFile', 'ByteBuffer']
+
+
 class TempFile(object):
     def __init__(self, headers=None):
         self._tempfile = tempfile.NamedTemporaryFile(delete=True)

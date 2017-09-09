@@ -3,6 +3,9 @@ from .header import HeaderParser
 from .request import RequestParser
 
 
+__all__ = ['HttpParser']
+
+
 class HttpParser(object):
     __slots__ = ['complete', 'rparser', 'hparser', 'bparser']
 

@@ -3,7 +3,7 @@
 from setuptools import find_packages, setup
 
 
-VERSION = '1.0.3'
+VERSION = '1.2.0'
 REPO_URL = 'https://github.com/drongo-framework/drongo-nest'
 DOWNLOAD_URL = REPO_URL + '/archive/v{version}.tar.gz'.format(version=VERSION)
 
@@ -33,7 +33,8 @@ setup(
     download_url=DOWNLOAD_URL,
     include_package_data=True,
     install_requires=[
-        'six'
+        'drongo>=1.2.0',
+        'six',
     ],
     zip_safe=False,
 )

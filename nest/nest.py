@@ -2,6 +2,9 @@ import socket
 import sys
 
 
+__all__ = ['Nest']
+
+
 class Nest(object):
     def __init__(self, **settings):
         self._clients = {}

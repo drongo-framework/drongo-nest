@@ -3,6 +3,9 @@ from .raw import RawParser
 from .urlencoded import UrlEncodedParser
 
 
+__all__ = ['BodyParser']
+
+
 class BodyParser(object):
     __slots__ = ['_buffer', '_parser', 'complete']
 

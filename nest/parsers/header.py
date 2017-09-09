@@ -4,6 +4,9 @@ import six
 NEW_LINE = b'\r\n'
 
 
+__all__ = ['HeaderParser']
+
+
 class HeaderParser(object):
     __slots__ = ['_buffer', 'complete']
 

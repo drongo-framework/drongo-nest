@@ -5,6 +5,9 @@ import six
 from nest import Nest
 
 
+__all__ = ['main']
+
+
 def _parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('app', help='py.module:app_instance')

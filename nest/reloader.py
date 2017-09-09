@@ -5,6 +5,9 @@ import time
 from threading import Thread
 
 
+__all__ = ['Reloader']
+
+
 class Reloader(Thread):
     __thread__ = None
 

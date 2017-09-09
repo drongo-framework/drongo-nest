@@ -3,6 +3,9 @@ from ..parsers import HttpParser
 import asyncio
 
 
+__all__ = ['AsyncHandler']
+
+
 class Reader(object):
     __slots__ = ['reader']
 

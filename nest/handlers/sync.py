@@ -6,6 +6,9 @@ import select
 import socket
 
 
+__all__ = ['SyncHandler']
+
+
 class Reader(object):
     BUFFER_SIZE = 102400
 

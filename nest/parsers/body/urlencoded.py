@@ -1,6 +1,9 @@
 import six.moves.urllib.parse as urlparse
 
 
+__all__ = ['UrlEncodedParser']
+
+
 class UrlEncodedParser(object):
     __slots__ = ['_buffer', 'complete']
 

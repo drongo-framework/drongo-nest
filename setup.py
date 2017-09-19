@@ -31,7 +31,6 @@ setup(
     url=REPO_URL,
     include_package_data=True,
     install_requires=[
-        'drongo>=1.2.0',
         'six',
     ],
     zip_safe=False,

@@ -58,6 +58,8 @@ class AsyncHandler(object):
         self.sock = socket
 
     def accept(self, reader, writer):
+        self._ip, self._port = writer.get_extra_info('peername')
+
         task = self.loop.create_task(self.handle(reader, writer))
         self._clients[task] = (reader, writer)
 
@@ -75,6 +77,10 @@ class AsyncHandler(object):
                 env = yield from http.get_one()
                 if env is None:
                     break
+
+                env['CLIENT_IP'] = self._ip
+                env['CLIENT_PORT'] = self._port
+
                 yield from responder.respond(env)
             except ConnectionResetError as _:
                 break  # Ignore the connection error

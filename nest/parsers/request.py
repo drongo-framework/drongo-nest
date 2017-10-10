@@ -7,7 +7,7 @@ __all__ = ['RequestParser']
 class RequestParser(object):
     __slots__ = ['_buffer', 'complete']
 
-    VALID_METHODS = set(['GET', 'POST', 'PUT', 'DELETE'])
+    VALID_METHODS = set(['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 
     def __init__(self):
         self._buffer = b''

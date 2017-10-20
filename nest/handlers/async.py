@@ -1,6 +1,6 @@
-from ..parsers import HttpParser
-
 import asyncio
+
+from ..parsers import HttpParser
 
 
 __all__ = ['AsyncHandler']
@@ -64,6 +64,7 @@ class AsyncHandler(object):
         self._clients[task] = (reader, writer)
 
         def client_done(task):
+            task.exception()
             del self._clients[task]
             writer.close()
         task.add_done_callback(client_done)
@@ -82,7 +83,7 @@ class AsyncHandler(object):
                 env['CLIENT_PORT'] = self._port
 
                 yield from responder.respond(env)
-            except ConnectionResetError as _:
+            except ConnectionResetError:
                 break  # Ignore the connection error
             except BrokenPipeError:
                 break  # Ignore the broken pipe error

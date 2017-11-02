@@ -56,7 +56,7 @@ class ConnectionWrapper(object):
             peer=self._peer
         ))
         self._logger.info(
-            'Received [{received} bytes] and send [{sent}] bytes.'.format(
+            'Received [{received} bytes] and send [{sent} bytes].'.format(
                 received=self._reader.byte_count,
                 sent=self._writer.byte_count
             )

@@ -51,7 +51,10 @@ class Reloader(Thread):
     def run(self):
         self.running = True
         while self.running:
-            self._scan()
+            try:
+                self._scan()
+            except Exception:
+                pass  # Ignore the errors during scan
             time.sleep(self.interval)
 
     @classmethod
